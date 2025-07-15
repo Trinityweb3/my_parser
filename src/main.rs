@@ -1,62 +1,59 @@
-use std::io::stdin;
-trait Getinfo {
-    fn get_info(&self) -> String;
-}
+use std::fs::OpenOptions;
+use reqwest::{header::USER_AGENT, Result};
+use std::io::Write;
+use reqwest::blocking::Client;
+const URL: &str = "https://www.floatrates.com/json-feeds.html";
+const CUSTOM_USER_AGENT: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
+const PATH: &str = "parse_result.txt";
 
-struct Message {
-    author: String,
-    text: String,
-}
-
-struct Post {
-    author: String,
-    content: String,
-}
-
-impl Getinfo for Message {
-    fn get_info(&self) -> String {
-        return format!("Message author is: {}\nMessage text is: {}", self.author, self.text);
-    }
-}
-
-impl Getinfo for Post {
-    fn get_info(&self) -> String {
-        return format!("Post author is: {}\nPost content: {}", self.author, self.content);
-    }
-} 
 fn main() {
-    let mut message_author: String = String::new();
-    let mut post_author: String = String::new();
-    let mut message_text: String = String::new();
-    let mut post_text: String = String::new();
+    let client = Client::new();
+    let response = client.get(URL).header(USER_AGENT,  CUSTOM_USER_AGENT);
+    let data = response.send().expect("Error").text().expect("Error");
 
-    println!("Enter a message author");
-    stdin().read_line(&mut message_author).expect("Error getting a user input");
-    println!("Enter a message text");
-    stdin().read_line(&mut message_text).expect("Error getting a user input");
-    println!("Enter a post author");
-    stdin().read_line(&mut post_author).expect("Error getting a user input");
-    println!("Enter a post_text");
-    stdin().read_line(&mut post_text).expect("Error getting a user input");
+    let mut file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .open(PATH)
+        .expect("Error reading/opening file");
 
-
-    let Message_by = Message {
-        author: message_author.to_string(),
-        text: message_text.to_string(),
-    };
-
-    let post_by = Post {
-        author: post_author.to_string(),
-        content: post_text.to_string(),
-        Likes: 11,
-    };
-    println!("-------------- <_> -------------");
-    println!("You have 2 unreaded message!...");
-    println!("-------------- <_> -------------");
-    println!("{}", Message_by.get_info());
-    println!("-------------- <_> -------------");
-    println!("{}", post_by.get_info());
-    println!("-------------- <_> -------------");
-
-
+    
+    file.write_all(data.as_bytes()).expect("Error writing to file");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+fn main() {
+    let num = [1, 2, 3, 4, 4, 1, 1, 5, 6];
+    // let chars = ['x','g', 'r', 'w', 'a', 'x', 'g', 'x'];
+    let result = find_re(&num);
+    println!("{:?}", result);
+}
+
+fn find_re<T>(list: &T) -> Vec<T> {
+    let mut vector: Vec<T> = Vec::new();
+    for i in 0..(list.len()) {
+        for j in (i+1)..(list.len()) {
+            if list[i] == list[j] {
+                if !vector.contains(&list[i]) {
+                    vector.push(list[i]);
+                }
+            }
+        }
+    }
+
+    return vector;
+} */
