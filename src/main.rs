@@ -21,39 +21,3 @@ fn main() {
     
     file.write_all(data.as_bytes()).expect("Error writing to file");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-fn main() {
-    let num = [1, 2, 3, 4, 4, 1, 1, 5, 6];
-    // let chars = ['x','g', 'r', 'w', 'a', 'x', 'g', 'x'];
-    let result = find_re(&num);
-    println!("{:?}", result);
-}
-
-fn find_re<T>(list: &T) -> Vec<T> {
-    let mut vector: Vec<T> = Vec::new();
-    for i in 0..(list.len()) {
-        for j in (i+1)..(list.len()) {
-            if list[i] == list[j] {
-                if !vector.contains(&list[i]) {
-                    vector.push(list[i]);
-                }
-            }
-        }
-    }
-
-    return vector;
-} */
